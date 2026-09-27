@@ -1,12 +1,13 @@
 <resources>
-    <string name="app_title">Pokédex</string>
-    <string name="start_hint">Empty. The list goes here — you are the one writing it. The state already holds %1$s records.</string>
-    <string name="action_toggle_theme">Toggle theme</string>
-    <string name="pokemon_number">#%1$s</string>
-    <string name="stat_hp">HP</string>
-    <string name="stat_attack">Attack</string>
-    <string name="stat_defense">Defense</string>
-    <string name="stat_special_attack">Sp. Attack</string>
-    <string name="stat_special_defense">Sp. Defense</string>
-    <string name="stat_speed">Speed</string>
+    <string name="app_title">Protein Catalog</string>
+    <string name="start_hint">Empty. There will be a list here — you are writing it. There are already %1$s records in the state.</string>
+    <string name="action_toggle_theme">Switch the theme</string>
+    <string name="action_toggle_lang">Switch the language</string>
+    <string name="protein_number">#%1$s</string>
+    <string name="not_find">Not find</string>
+    <string name="back">Back</string>
+    <string name="full_name">Full name</string>
+    <string name="gene">Gene</string>
+    <string name="amino_acid_sequence">Amino Acid sequence</string>
+    <string name="organism">Organism</string>
 </resources>

@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
@@ -53,10 +54,19 @@ kotlin {
     
     sourceSets {
         androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
         }
+        jvmMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
         commonMain.dependencies {
+            implementation(libs.ktor.client.encoding)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.json)
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
