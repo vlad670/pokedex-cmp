@@ -10,4 +10,6 @@
     <string name="gene">Ген</string>
     <string name="amino_acid_sequence">Последовательность аминокислот</string>
     <string name="organism">Организм</string>
+    <string name="related_proteins">Связанные белки</string>
+    <string name="found">Найдено</string>
 </resources>

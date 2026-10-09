@@ -3,42 +3,45 @@ package band.effective.education.crossplatform.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import band.effective.education.crossplatform.data.Protein
-
+import band.effective.education.crossplatform.data.mockProteins
 import band.effective.education.crossplatform.resources.Res
-import band.effective.education.crossplatform.resources.back
 import band.effective.education.crossplatform.resources.amino_acid_sequence
+import band.effective.education.crossplatform.resources.back
 import band.effective.education.crossplatform.resources.full_name
 import band.effective.education.crossplatform.resources.gene
 import band.effective.education.crossplatform.resources.not_find
 import band.effective.education.crossplatform.resources.organism
+import band.effective.education.crossplatform.resources.related_proteins
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ProteinDetailScreen(protein: Protein?, onBackClick: () -> Unit) {
-    if (protein == null) {
-        AppScaffold {
-            Text(stringResource(Res.string.not_find), modifier = Modifier.padding(16.dp))
-        }
-        return
-    }
+fun ProteinDetailScreen(
+    accession: String,
+    onProteinClick: (String) -> Unit,
+    onBackClick: () -> Unit,
+) {
+    val protein = mockProteins.firstOrNull { it.primaryAccession == accession }
 
-    AppScaffold (
+    AppScaffold(
         actions = {
-            Button(
-                onClick = { onBackClick() },
-                modifier =  Modifier.padding(end = 8.dp)
-            ){
+            Button(onClick = onBackClick, modifier = Modifier.padding(end = 8.dp)) {
                 Text(stringResource(Res.string.back))
             }
         }
-        ){
+    ) {
+        if (protein == null) {
+            Text(stringResource(Res.string.not_find), modifier = Modifier.padding(16.dp))
+            return@AppScaffold
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -63,7 +66,7 @@ fun ProteinDetailScreen(protein: Protein?, onBackClick: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(text = stringResource(Res.string.gene), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
-            Text(text = protein.geneName ?: "Неизвестно", style = MaterialTheme.typography.bodyMedium)
+            Text(text = protein.geneName ?: stringResource(Res.string.not_find), style = MaterialTheme.typography.bodyMedium)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -71,8 +74,22 @@ fun ProteinDetailScreen(protein: Protein?, onBackClick: () -> Unit) {
             Text(
                 text = protein.sequence ?: stringResource(Res.string.not_find),
                 style = MaterialTheme.typography.bodyMedium,
-                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
+                fontFamily = FontFamily.Monospace
             )
+
+            if (protein.related.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = stringResource(Res.string.related_proteins),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                protein.related.forEach { related ->
+                    TextButton(onClick = { onProteinClick(related.accession) }) {
+                        Text(related.accession + (related.geneName?.let { " · $it" } ?: ""))
+                    }
+                }
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ data class UniProtEntryDto(
     val proteinDescription: ProteinDescriptionDto? = null,
     val genes: List<GeneDto>? = null,
     val organism: OrganismDto? = null,
-    val sequence: SequenceDto? = null
+    val sequence: SequenceDto? = null,
 )
 
 @Serializable
@@ -33,6 +33,19 @@ data class OrganismDto(val scientificName: String? = null, val commonName: Strin
 
 @Serializable
 data class SequenceDto(val value: String? = null, val length: Int? = null)
+
+
+val comments: List<CommentDto>? = null
+
+@Serializable
+data class CommentDto(val commentType: String? = null, val interactions: List<InteractionDto>? = null)
+
+@Serializable
+data class InteractionDto(val interactantOne: InteractantDto? = null, val interactantTwo: InteractantDto? = null)
+
+@Serializable
+data class InteractantDto(val uniProtKBAccession: String? = null, val geneName: String? = null)
+
 fun UniProtEntryDto.toProtein(): Protein = Protein(
     primaryAccession = primaryAccession,
     entryName = uniProtkbId ?: primaryAccession,
@@ -42,5 +55,21 @@ fun UniProtEntryDto.toProtein(): Protein = Protein(
         organism?.commonName?.let { append(" ($it)") }
     },
     geneName = genes?.firstOrNull()?.geneName?.value,
-    sequence = sequence?.value
+    sequence = sequence?.value,
+    related = relatedProteins()
 )
+
+private fun UniProtEntryDto.relatedProteins(): List<RelatedProtein> =
+    comments.orEmpty()
+        .filter { it.commentType == "INTERACTION" }
+        .flatMap { it.interactions.orEmpty() }
+        .mapNotNull { interaction ->
+            listOfNotNull(interaction.interactantOne, interaction.interactantTwo)
+                .mapNotNull { p ->
+                    p.uniProtKBAccession?.substringBefore('-')  // отбрасываем изоформу P12345-2
+                        ?.let { RelatedProtein(it, p.geneName) }
+                }
+                .firstOrNull { it.accession != primaryAccession }  // берём «второго» участника
+        }
+        .distinctBy { it.accession }
+        .take(10)
