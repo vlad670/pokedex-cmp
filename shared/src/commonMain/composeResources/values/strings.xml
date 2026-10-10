@@ -12,4 +12,5 @@
     <string name="organism">Организм</string>
     <string name="related_proteins">Связанные белки</string>
     <string name="found">Найдено</string>
+    <string name="search">Поиск</string>
 </resources>

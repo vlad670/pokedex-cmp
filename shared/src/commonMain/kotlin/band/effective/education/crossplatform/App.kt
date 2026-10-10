@@ -15,8 +15,6 @@ import band.effective.education.crossplatform.ui.locale.AppEnvironment
 import androidx.compose.runtime.mutableStateListOf
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally

@@ -12,4 +12,5 @@
     <string name="organism">Organism</string>
     <string name="related_proteins">Related proteins</string>
     <string name="found">Found</string>
+    <string name="search">Search</string>
 </resources>

@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import band.effective.education.crossplatform.data.Protein
@@ -17,18 +17,38 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ProteinListScreen(onProteinClick: (String) -> Unit) {
+    var searchQuery by remember { mutableStateOf("") }
+
+    val filteredProteins = remember(searchQuery) {
+        if (searchQuery.isBlank()) {
+            mockProteins
+        } else {
+            mockProteins.filter { protein ->
+                protein.proteinName.contains(searchQuery, ignoreCase = true) ||
+                protein.primaryAccession.contains(searchQuery, ignoreCase = true) ||
+                protein.organismName.contains(searchQuery, ignoreCase = true) ||
+                (protein.geneName?.contains(searchQuery, ignoreCase = true) == true)
+            }
+        }
+    }
+
     AppScaffold {
         Column {
+            SearchBar(
+                query = searchQuery,
+                onQueryChange = { searchQuery = it },
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
             Text(
-                text = "${stringResource(Res.string.found)}: ${mockProteins.size}",
-                modifier = Modifier.padding(16.dp),
+                text = "${stringResource(Res.string.found)}: ${filteredProteins.size}",
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                 style = MaterialTheme.typography.bodySmall
             )
             LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(mockProteins) { item ->
+                items(filteredProteins, key = { it.primaryAccession }) { item ->
                     ProteinRow(
                         protein = item,
                         onClick = { onProteinClick(item.primaryAccession) }

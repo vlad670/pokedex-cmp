@@ -62,6 +62,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
+            implementation(compose.materialIconsExtended)
             implementation(libs.ktor.client.encoding)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
